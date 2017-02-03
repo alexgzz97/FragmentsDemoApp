@@ -4,10 +4,13 @@ package com.definityfirst.jesusgonzalez.fragmentsdemoapp;
  * Created by jesus.gonzalez on 02/02/2017.
  */
 
+import android.content.Intent;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -36,12 +39,14 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static android.R.attr.bitmap;
 import static android.R.attr.thumbnail;
 
 
 public class VideoFragment extends AbsListBaseFragment {
+    private static Bitmap thumb;
     public static final int INDEX = 3;
 
 
@@ -54,17 +59,12 @@ public class VideoFragment extends AbsListBaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ImagePagerFragment newFragment = new ImagePagerFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_frame, newFragment);
-                transaction.addToBackStack(null);
-                Bundle args=new Bundle();
-                args.putInt("pos",position);
-                newFragment.setArguments(args);
-                transaction.commit();
-
-
+              Log.d("infoview",Constants.listFiles[position].getAbsolutePath());
+                String newVideoPath = "file://"+Constants.listFiles[position].getAbsolutePath();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                Uri data = Uri.parse(newVideoPath);
+                intent.setDataAndType(data, "video/*");
+                startActivity(intent);
             }
         });
         return rootView;
@@ -81,7 +81,7 @@ public class VideoFragment extends AbsListBaseFragment {
 
 
     public static class ImageAdapter extends BaseAdapter {
-        private static final String[] IMAGE_URLS = Constants.IMAGES;
+        private static final String[] IMAGE_URLS = Constants.VIDEOS;
 
         private LayoutInflater inflater;
 
@@ -130,8 +130,7 @@ public class VideoFragment extends AbsListBaseFragment {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
-
-            ImageLoader.getInstance()
+          ImageLoader.getInstance()
 
                     .displayImage(IMAGE_URLS[position], holder.imageView, options, new SimpleImageLoadingListener() {
                         @Override
@@ -164,4 +163,5 @@ public class VideoFragment extends AbsListBaseFragment {
         ImageView imageView;
         ProgressBar progressBar;
     }
+
 }

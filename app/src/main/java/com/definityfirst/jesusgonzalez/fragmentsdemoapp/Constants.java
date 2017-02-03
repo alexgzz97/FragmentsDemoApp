@@ -4,19 +4,31 @@ package com.definityfirst.jesusgonzalez.fragmentsdemoapp;
  * Created by jesus.gonzalez on 02/02/2017.
  */
 
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
 public final class Constants {
+    static Bitmap thumb;
 
     static ArrayList<String> f = new ArrayList<String>();// list of file paths
     static ArrayList<String> v = new ArrayList<String>();// list of file paths
     static File[] listFile;
     static File[] listFiles;
+    static File[] listFilesth;
 
     public static final String[] IMAGES = (String[]) getFromSdcard().toArray(new String[0]);
     public static final String[] VIDEOS = (String[]) getVideosFromSdcard().toArray(new String[0]);
@@ -51,19 +63,21 @@ public final class Constants {
     }
     public static ArrayList<String> getVideosFromSdcard() {
         File file= new File(android.os.Environment.getExternalStorageDirectory(),"MediaVideos");
+        File fileth= new File(android.os.Environment.getExternalStorageDirectory(),"MediaVideosThumbs");
 
         if (file.isDirectory())
         {
             listFiles = file.listFiles();
-
+            listFilesth = fileth.listFiles();
 
             for (int i = 0; i < listFiles.length; i++)
             {
-
-                v.add(listFiles[i].getAbsolutePath());
+                v.add("file://"+listFiles[i].getAbsolutePath());
 
             }
+
         }
         return v;
     }
+
 }
